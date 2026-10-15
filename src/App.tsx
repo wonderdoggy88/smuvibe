@@ -14,7 +14,10 @@ import {
   Sparkles,
   CloudSun,
   X,
-  Check
+  Check,
+  Newspaper,
+  Compass,
+  Volume2
 } from 'lucide-react';
 import { Article, ARTICLES } from './data/newsData';
 import { ArticleView } from './components/ArticleView';
@@ -24,6 +27,10 @@ import { PollingTrackerModal } from './components/PollingTrackerModal';
 import { SubscriptionModal } from './components/SubscriptionModal';
 import { AuthModal } from './components/AuthModal';
 import { SearchModal } from './components/SearchModal';
+import { WeatherModal } from './components/WeatherModal';
+import { MarketsModal } from './components/MarketsModal';
+import { TodayPaperModal } from './components/TodayPaperModal';
+import { NytMastheadText } from './components/NytLogo';
 
 export default function App() {
   // Navigation & View State
@@ -39,6 +46,9 @@ export default function App() {
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [isWeatherModalOpen, setIsWeatherModalOpen] = useState(false);
+  const [isMarketsModalOpen, setIsMarketsModalOpen] = useState(false);
+  const [isTodayPaperModalOpen, setIsTodayPaperModalOpen] = useState(false);
 
   // User & Saved Articles state (persisted to localStorage)
   const [currentUser, setCurrentUser] = useState<{ email: string; name: string } | null>(() => {
@@ -172,7 +182,7 @@ export default function App() {
       <header className="w-full bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           {/* Top Utility Row */}
-          <div className="flex items-center justify-between py-1.5 border-b border-transparent">
+          <div className="flex items-center justify-between py-1 border-b border-transparent">
             {/* Edition links */}
             <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-neutral-600">
               {(['U.S.', 'International', 'Canada', 'Español', '中文'] as const).map((ed, idx) => (
@@ -196,8 +206,8 @@ export default function App() {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setIsSearchModalOpen(true)}
-                className="hidden sm:flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-neutral-600 hover:text-black px-2 py-1 transition-colors"
-                title="Search (Cmd+K)"
+                className="hidden sm:flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-neutral-600 hover:text-black px-2 py-0.5 transition-colors"
+                title="Search the archives"
               >
                 <Search className="w-3.5 h-3.5" />
                 <span>Search</span>
@@ -235,45 +245,78 @@ export default function App() {
             <div className="flex items-center gap-3">
               <span className="text-neutral-900">Wednesday, October 14, 2026</span>
               <button
-                onClick={() => handleSelectSection('Today’s Paper')}
-                className="hover:text-black font-semibold transition-colors"
+                onClick={() => setIsTodayPaperModalOpen(true)}
+                className="hover:text-black font-semibold transition-colors flex items-center gap-1"
               >
+                <Newspaper className="w-3 h-3 text-neutral-500" />
                 Today’s Paper
               </button>
             </div>
 
             <div className="flex items-center gap-4 uppercase text-[10px] tracking-wider">
-              <div className="flex items-center gap-1.5 text-neutral-700">
+              <button
+                onClick={() => setIsWeatherModalOpen(true)}
+                className="flex items-center gap-1.5 text-neutral-700 hover:text-black transition-colors"
+                title="View weather almanac"
+              >
                 <span className="material-symbols-outlined text-[16px] text-neutral-600">
                   partly_cloudy_day
                 </span>
                 <span>New York 64°F</span>
-              </div>
+              </button>
               <div className="flex items-center gap-3 border-l border-neutral-200 pl-3">
-                <span>
+                <button
+                  onClick={() => setIsMarketsModalOpen(true)}
+                  className="hover:text-black transition-colors"
+                  title="View financial markets"
+                >
                   S&P 500 <strong className="text-neutral-900">+0.42%</strong>
-                </span>
-                <span>
+                </button>
+                <button
+                  onClick={() => setIsMarketsModalOpen(true)}
+                  className="hover:text-black transition-colors"
+                  title="View financial markets"
+                >
                   NASDAQ <strong className="text-neutral-900">+0.68%</strong>
-                </span>
+                </button>
               </div>
             </div>
           </div>
 
           <div className="border-b border-neutral-200 mb-2"></div>
 
-          {/* Centered Classic Masthead */}
-          <div className="py-2 text-center">
-            <button
-              onClick={handleBackToFrontpage}
-              className="inline-block text-center text-neutral-950 font-masthead text-5xl sm:text-6xl md:text-7xl hover:opacity-95 transition-opacity tracking-tight"
-            >
-              The New York Times
-            </button>
+          {/* Centered Classic Masthead with Broadsheet Ears */}
+          <div className="py-2.5 relative flex items-center justify-between">
+            {/* Left Ear: Motto */}
+            <div className="hidden lg:block w-36 text-left">
+              <p className="text-[10px] leading-tight font-serif italic text-neutral-500 border border-neutral-200 p-1.5 bg-neutral-50">
+                “All the News That’s Fit to Print”
+              </p>
+            </div>
+
+            {/* Centered Masthead */}
+            <div className="flex-1 text-center">
+              <button
+                onClick={handleBackToFrontpage}
+                className="inline-block text-center hover:opacity-95 transition-opacity"
+              >
+                <NytMastheadText size="lg" />
+              </button>
+            </div>
+
+            {/* Right Ear: Edition summary */}
+            <div className="hidden lg:block w-36 text-right">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-neutral-600">
+                Late Edition
+              </div>
+              <div className="text-[9px] text-neutral-400">
+                Vol. CLXXVI No. 60,342
+              </div>
+            </div>
           </div>
 
           {/* Section Navigation Ribbon */}
-          <nav className="border-y border-neutral-200 py-1.5 flex items-center justify-center gap-5 sm:gap-7 flex-wrap text-xs font-bold uppercase tracking-wider text-neutral-700">
+          <nav className="border-y border-neutral-200 py-1.5 flex items-center justify-center gap-4 sm:gap-7 flex-wrap text-xs font-bold uppercase tracking-wider text-neutral-700">
             {[
               'U.S.',
               'World',
@@ -1005,9 +1048,9 @@ export default function App() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 border-b border-neutral-200 gap-4">
             <button
               onClick={handleBackToFrontpage}
-              className="font-masthead text-3xl font-bold text-neutral-950 hover:opacity-90"
+              className="hover:opacity-90 transition-opacity"
             >
-              The New York Times
+              <NytMastheadText size="sm" />
             </button>
             <div className="flex items-center gap-5 text-[11px] font-bold uppercase tracking-wider text-neutral-600 flex-wrap">
               <button
@@ -1017,7 +1060,7 @@ export default function App() {
                 Subscribe
               </button>
               <button
-                onClick={() => handleSelectSection('Home Delivery')}
+                onClick={() => setIsTodayPaperModalOpen(true)}
                 className="hover:text-black"
               >
                 Home Delivery
@@ -1122,7 +1165,48 @@ export default function App() {
         </div>
       </footer>
 
-      {/* MODALS */}
+      {/* STICKY BOTTOM MOBILE QUICK DOCK */}
+      <div className="sm:hidden sticky bottom-0 z-30 bg-white/95 backdrop-blur-xs border-t border-neutral-300 px-4 py-2 flex items-center justify-between text-xs text-neutral-700 shadow-lg">
+        <button
+          onClick={handleBackToFrontpage}
+          className="flex flex-col items-center gap-0.5 text-neutral-900 font-bold"
+        >
+          <Newspaper className="w-4 h-4" />
+          <span className="text-[10px]">Front Page</span>
+        </button>
+        <button
+          onClick={() => openGame('wordle')}
+          className="flex flex-col items-center gap-0.5 hover:text-black"
+        >
+          <span className="w-4 h-4 bg-[#6aaa64] text-white flex items-center justify-center font-bold text-[9px]">
+            W
+          </span>
+          <span className="text-[10px]">Games</span>
+        </button>
+        <button
+          onClick={() => setIsPollingModalOpen(true)}
+          className="flex flex-col items-center gap-0.5 hover:text-black"
+        >
+          <TrendingUp className="w-4 h-4 text-[#3d627b]" />
+          <span className="text-[10px]">Polling</span>
+        </button>
+        <button
+          onClick={() => setIsSearchModalOpen(true)}
+          className="flex flex-col items-center gap-0.5 hover:text-black"
+        >
+          <Search className="w-4 h-4" />
+          <span className="text-[10px]">Search</span>
+        </button>
+        <button
+          onClick={() => setIsAuthModalOpen(true)}
+          className="flex flex-col items-center gap-0.5 hover:text-black"
+        >
+          <Bookmark className="w-4 h-4" />
+          <span className="text-[10px]">Saved</span>
+        </button>
+      </div>
+
+      {/* ALL MODALS */}
       {isGamesModalOpen && (
         <NytGamesModal
           initialGame={initialGameTab}
@@ -1132,6 +1216,21 @@ export default function App() {
 
       {isPollingModalOpen && (
         <PollingTrackerModal onClose={() => setIsPollingModalOpen(false)} />
+      )}
+
+      {isWeatherModalOpen && (
+        <WeatherModal onClose={() => setIsWeatherModalOpen(false)} />
+      )}
+
+      {isMarketsModalOpen && (
+        <MarketsModal onClose={() => setIsMarketsModalOpen(false)} />
+      )}
+
+      {isTodayPaperModalOpen && (
+        <TodayPaperModal
+          onClose={() => setIsTodayPaperModalOpen(false)}
+          onSelectArticle={handleSelectArticle}
+        />
       )}
 
       {isSubscriptionModalOpen && (
