@@ -1,0 +1,6 @@
+{
+  "name": "The New York Times - Digital Edition",
+  "description": "Authentic broadsheet digital edition of The New York Times with breaking news, deep dives, opinion, live election polling, and daily NYT games.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
